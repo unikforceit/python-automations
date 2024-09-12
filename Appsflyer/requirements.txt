@@ -1,0 +1,4 @@
+streamlit==1.22.0
+Appium-Python-Client==2.8.1
+selenium==4.10.0
+pandas==2.1.1

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UFO Tools</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1200px;
+            text-align: center;
+            overflow: hidden;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .tabs, .sub-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab, .sub-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #f1f1f1;
+            transition: background-color 0.3s;
+        }
+        .tab.active, .sub-tab.active {
+            background-color: white;
+            border-bottom: 2px solid #007BFF;
+        }
+        .tab-content, .sub-tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            overflow: auto;
+        }
+        .tab-content.active, .sub-tab-content.active {
+            display: block;
+        }
+        select, input[type="text"], input[type="password"], button {
+            width: 100%;
+            padding: 10px 0;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .link-item {
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            word-wrap: break-word;
+            text-align: left;
+        }
+        .link-title {
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container hidden" id="content">
+        <h1>Link Generator</h1>
+        <div class="tabs">
+            <div class="tab active" data-target="appsflyer">Appsflyer</div>
+            <div class="tab" data-target="s2s">S2S</div>
+        </div>
+        <div id="appsflyer" class="tab-content active">
+            <div class="sub-tabs">
+                <div class="sub-tab active" data-target="appsflyer_android">Android</div>
+                <div class="sub-tab" data-target="appsflyer_ios">iOS</div>
+            </div>
+            <div id="appsflyer_android" class="sub-tab-content active">
+                <select id="appsflyerGamesAndroid">
+                    <option value="ant_legion">Ant Legion</option>
+                    <option value="puzzle_and_chaos">Puzzle and Chaos</option>
+                    <option value="puzzle_and_survival">Puzzle and Survival</option>
+                    <option value="merge_garden">Merge Garden</option>
+                    <option value="fairy_escaps">Fairy Escaps</option>
+                </select>
+                <input type="text" id="appsflyerInputAndroid" placeholder="Enter AppsFlyer Link">
+                <div class="buttons">
+                    <button onclick="generateAppsflyerLinks('Android')">Generate Links</button>
+                    <button onclick="clearFields('appsflyerInputAndroid', 'appsflyerOutputAndroid')">Clear</button>
+                    <button onclick="copyToClipboard('appsflyerOutputAndroid')">Copy All Links</button>
+                </div>
+                <div id="appsflyerOutputAndroid"></div>
+            </div>
+            <!-- <div id="appsflyer_ios" class="sub-tab-content">
+                <select id="appsflyerGamesiOS">
+                    <option value="ant_legion_ios">Ant Legion</option>
+                    <option value="puzzle_and_survival_ios">Puzzle and Survival</option>
+                </select>
+                <input type="text" id="appsflyerInputiOS" placeholder="Enter AppsFlyer Link">
+                <div class="buttons">
+                    <button onclick="generateAppsflyerLinks('iOS')">Generate Links</button>
+                    <button onclick="clearFields('appsflyerInputiOS', 'appsflyerOutputiOS')">Clear</button>
+                    <button onclick="copyToClipboard('appsflyerOutputiOS')">Copy All Links</button>
+                </div>
+                <div id="appsflyerOutputiOS"></div>
+            </div> -->
+        </div>
+        <div id="s2s" class="tab-content">
+            <div class="sub-tabs">
+                <div class="sub-tab active" data-target="s2s_android">Android</div>
+                <div class="sub-tab" data-target="s2s_ios">iOS</div>
+            </div>
+            <div id="s2s_android" class="sub-tab-content active">
+                <select id="s2sGamesAndroid">
+                    <option value="monopoly">Monopoly</option>
+                    <option value="gardenjoy">Garden Joy</option>
+                </select>
+                <input type="text" id="s2sInputAndroid" placeholder="Enter ADID">
+                <div class="buttons">
+                    <button onclick="generateS2SLinks('Android')">Generate Links</button>
+                    <button onclick="clearFields('s2sInputAndroid', 's2sOutputAndroid')">Clear</button>
+                    <button onclick="copyToClipboard('s2sOutputAndroid')">Copy All Links</button>
+                </div>
+                <div id="s2sOutputAndroid"></div>
+            </div>
+            <div id="s2s_ios" class="sub-tab-content">
+                <select id="s2sGamesiOS">
+                    <option value="monopoly_ios">Monopoly</option>
+                    <!-- Add more iOS games here as needed -->
+                </select>
+                <input type="text" id="s2sInputiOS" placeholder="Enter IDFA">
+                <div class="buttons">
+                    <button onclick="generateS2SLinks('iOS')">Generate Links</button>
+                    <button onclick="clearFields('s2sInputiOS', 's2sOutputiOS')">Clear</button>
+                    <button onclick="copyToClipboard('s2sOutputiOS')">Copy All Links</button>
+                </div>
+                <div id="s2sOutputiOS"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="login" class="container">
+        <h1>Password Protected Area</h1>
+        <input type="password" id="password" placeholder="Enter Password">
+        <button onclick="checkPassword()">Submit</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+         const correctPassword = '@@@@'; // Set your password here
+        const cookieName = 'authTokenRK';
+        const cookieExpiryDays = 1; // 24 hours
+
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function deleteCookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+
+        function checkPassword() {
+            const inputPassword = $('#password').val();
+            if (inputPassword === correctPassword) {
+                setCookie(cookieName, 'authenticated', cookieExpiryDays);
+                $('#login').hide();
+                $('#content').removeClass('hidden');
+            } else {
+                alert('Incorrect password.');
+            }
+        }
+
+        $(document).ready(function() {
+            if (getCookie(cookieName)) {
+                $('#login').hide();
+                $('#content').removeClass('hidden');
+            }
+
+            $('.tab').on('click', function() {
+                var target = $(this).data('target');
+                $('.tab, .tab-content').removeClass('active');
+                $(this).addClass('active');
+                $('#' + target).addClass('active');
+            });
+
+            $('.sub-tab').on('click', function() {
+                var target = $(this).data('target');
+                $('.sub-tab, .sub-tab-content').removeClass('active');
+                $(this).addClass('active');
+                $('#' + target).addClass('active');
+            });
+        });
+
+        function calculateFutureTime(index) {
+            const baseTime = new Date(); // Capture the time when links are being generated
+            const futureTime = new Date(baseTime.getTime() + (48 * (index + 1) * 3600000)); // 48 hours later per link
+            return futureTime.toLocaleString(); // Return the formatted future date and time
+        }
+        
+        function generateAppsflyerLinks(platform) {
+            const inputId = platform === 'Android' ? 'appsflyerInputAndroid' : 'appsflyerInputiOS';
+            const outputId = platform === 'Android' ? 'appsflyerOutputAndroid' : 'appsflyerOutputiOS';
+            const gameSelectId = platform === 'Android' ? '#appsflyerGamesAndroid' : '#appsflyerGamesiOS';
+
+            const game = $(gameSelectId).val();
+            const inputBaseLink = $('#' + inputId).val();
+            const output = $('#' + outputId);
+            output.empty();
+
+            const params = new URL(inputBaseLink);
+            const memberid = params.searchParams.get('memberid');
+            const clickid = params.searchParams.get('clickid');
+
+            // Validate presence of necessary parameters
+            if (!memberid || !clickid) {
+                output.append('<div>Base link is missing required parameters (memberid or clickid).</div>');
+                return;
+            }
+
+            const linksConfig = {
+                'ant_legion': [
+                    { name: "Install", sub1: "GPB74" },
+                    { name: "Unlock Epic Specialized Ants", sub1: "GPB75" },
+                    { name: "Queen LVL 11", sub1: "GPB78" },
+                    { name: "Queen LVL 18", sub1: "GPB7B" },
+                    { name: "Queen LVL 23", sub1: "GPB7E" },
+                    { name: "Queen LVL 31", sub1: "GPB7H" }
+                ],
+                'ant_legion_ios': [
+                    { name: "Install", sub1: "GPB7M" },
+                    { name: "Queen LVL 11", sub1: "GPB7Q" },
+                    { name: "Queen LVL 18", sub1: "GPB7T" },
+                    { name: "Queen LVL 23", sub1: "GPB7W" },
+                    { name: "Queen LVL 31", sub1: "GPB7Z" }
+                ],
+                'puzzle_and_chaos': [
+                    { name: "Install & Open", sub1: "GPDms" },
+                    { name: "Purchase Carvell Pack", sub1: "GPFUO" },
+                    { name: "Castle 2", sub1: "GPFUL" },
+                    { name: "Castle 6", sub1: "GPDmy" },
+                    { name: "Castle 11", sub1: "GPDmz" },
+                    { name: "Castle 16", sub1: "GPDn3" },
+                    { name: "Castle 23", sub1: "GPDn5" },
+                    { name: "Castle 30", sub1: "GPDn9" }
+                ],
+                'puzzle_and_survival': [
+                    { name: "Install & HQ2", sub1: "GPAkb" },
+                    { name: "Unlock 5 Star", sub1: "GPAkc" },
+                    { name: "HQ 9", sub1: "GPEqx" },
+                    { name: "HQ 11", sub1: "GPAkf" },
+                    { name: "HQ 16", sub1: "GPBF7" },
+                    { name: "HQ 23", sub1: "GPAkl" },
+                    { name: "HQ 31", sub1: "GPAko" }
+                ],
+                'puzzle_and_survival_ios': [
+                    { name: "Install & HQ2", sub1: "GPAkb" },
+                    { name: "Unlock 5 Star", sub1: "GPAku" },
+                    { name: "HQ 11", sub1: "GPAkx" },
+                    { name: "HQ 23", sub1: "GPAl3" },
+                    { name: "HQ 31", sub1: "GPAl6" }
+                ],
+                'merge_garden': [
+                    { name: "Install", sub1: "GPA3h" },
+                    { name: "Gem Deal for $3.99", sub1: "GPDV1" },
+                    { name: "Barrel of Gems for $19.99", sub1: "GPDV4" },
+                    { name: "Purchase", sub1: "GPIWd" },
+                    { name: "LVL 5", sub1: "GPDU7" },
+                    { name: "LVL 7", sub1: "GPIjZ" },
+                    { name: "LVL 15", sub1: "GPDUA" },
+                    { name: "LVL 20", sub1: "GPDUD" },
+                    { name: "LVL 35", sub1: "GPDUG" },
+                    { name: "LVL 51", sub1: "GPEFS" },
+                    { name: "LVL 56", sub1: "GPIWa" },
+                    { name: "LVL 62", sub1: "GPJnh" },
+                    { name: "LVL 100", sub1: "GPJnk" }
+                ],
+                'fairy_escaps': [
+                    { name: "Install", sub1: "GPEYL" },
+                    { name: "LVL 7", sub1: "GPEXq" },
+                    { name: "LVL 10", sub1: "GPEXt" },
+                    { name: "Gem Pack", sub1: "GPEYA" },
+                    { name: "LVL 13", sub1: "GPFDC" },
+                    { name: "LVL 15", sub1: "GPJf8" },
+                    { name: "Premium Gem Pack", sub1: "GPEYE" },
+                    { name: "LVL 19", sub1: "GPEXy" },
+                    { name: "LVL 23", sub1: "GPJfC" },
+                    { name: "Stone Gift Box", sub1: "GPF55" },
+                    { name: "LVL 25", sub1: "GPEY8" },
+                    { name: "LVL 29", sub1: "GPJfD" },
+                    { name: "VIP Status", sub1: "GPFDF" },
+                    { name: "LVL 31", sub1: "GPEgi" },
+                    { name: "LVL 41", sub1: "GPF57" },
+                    { name: "LVL 51", sub1: "GPF5B" }
+                ]
+
+
+                // Additional games can be added here similarly
+            };
+
+            if (!linksConfig[game]) {
+                output.append('<div>No link configuration available for this game.</div>');
+                return;
+            }
+
+            // Extract sub1 from the input link
+            const sub1FromInput = params.searchParams.get('sub1');
+
+            // Generate links with replaced sub1
+            linksConfig[game].forEach(function(link, index) {
+                const validUntil = calculateFutureTime(index);
+                // Replace sub1 in the inputBaseLink with the current link's sub1
+                const modifiedLink = inputBaseLink.replace(`sub1=${sub1FromInput}`, `sub1=${link.sub1}`);
+                let linkElement = `<div class="link-item"><div class="link-title"><strong>${link.name} (Postback: ${validUntil})</strong>:</div></br><div class="link-url">${modifiedLink}</div></div>`;
+                output.append(linkElement);
+            });
+        }
+
+
+        function generateS2SLinks(platform) {
+                const inputId = platform === 'Android' ? 's2sInputAndroid' : 's2sInputiOS';
+                const outputId = platform === 'Android' ? 's2sOutputAndroid' : 's2sOutputiOS';
+                const gameSelectId = platform === 'Android' ? '#s2sGamesAndroid' : '#s2sGamesiOS';
+
+                const game = $(gameSelectId).val();
+                const adid = $('#' + inputId).val(); // For Android ADID and for iOS IDFA
+                const output = $('#' + outputId);
+                output.empty();
+
+                const s2sParams = {
+                    'monopoly': [
+                        { name: "Board 2", app_token: "8uu91lb869z4", event_token: "skzz0u" },
+                        { name: "Board 3", app_token: "8uu91lb869z4", event_token: "ylgkw8" },
+                        { name: "Board 4/5", app_token: "8uu91lb869z4", event_token: "1bbmdv" },
+                        { name: "Board 6", app_token: "8uu91lb869z4", event_token: "uilfqv" },
+                        { name: "Board 7", app_token: "8uu91lb869z4", event_token: "9k0156" },
+                        { name: "Board 11/12", app_token: "8uu91lb869z4", event_token: "up0tra" },
+                        { name: "Board 18/19", app_token: "8uu91lb869z4", event_token: "js4kik" },
+                        { name: "Board 26/27", app_token: "8uu91lb869z4", event_token: "na6ujc" },
+                        { name: "Board 31/32", app_token: "8uu91lb869z4", event_token: "c6gjz8" },
+                        { name: "Board 36/37", app_token: "8uu91lb869z4", event_token: "7v6ibj" },
+                        { name: "Board 41/42", app_token: "8uu91lb869z4", event_token: "wylggm" },
+                        { name: "Board 55/56", app_token: "8uu91lb869z4", event_token: "1secun" },
+                        { name: "Board 70/71", app_token: "8uu91lb869z4", event_token: "fyocg0" },
+                        { name: "Board 85/86", app_token: "8uu91lb869z4", event_token: "q03m3p" },
+                        { name: "Board 100/101", app_token: "8uu91lb869z4", event_token: "5alsot" },
+                        { name: "Board 125/126", app_token: "8uu91lb869z4", event_token: "7u6s5t" },
+                        { name: "Board 150/151", app_token: "8uu91lb869z4", event_token: "u3wah3" },
+                        { name: "Board 175/176", app_token: "8uu91lb869z4", event_token: "3pi5k6" },
+                        { name: "Board 200/201", app_token: "8uu91lb869z4", event_token: "6uhy5a" },
+                        { name: "Board 250/251", app_token: "8uu91lb869z4", event_token: "9uwta9" },
+                        { name: "Board 300/301", app_token: "8uu91lb869z4", event_token: "c5m5x3" },
+                        { name: "Purchase", app_token: "8uu91lb869z4", event_token: "9uj0ba" }
+                    ],
+                    'gardenjoy': [
+                        { name: "First Purchase", app_token: "mqtek844d2ww", event_token: "rkh2e4" },
+                        { name: "Level 5", app_token: "mqtek844d2ww", event_token: "x5auo7" },
+                        { name: "Level 9", app_token: "mqtek844d2ww", event_token: "8mtvou" },
+                        { name: "Level 16", app_token: "mqtek844d2ww", event_token: "cda96i" },
+                        { name: "Level 21", app_token: "mqtek844d2ww", event_token: "rfjjoc" },
+                        { name: "Level 26", app_token: "mqtek844d2ww", event_token: "vslye4" },
+                        { name: "Level 34", app_token: "mqtek844d2ww", event_token: "ukcmkj" },
+                        { name: "Unknown 1", app_token: "mqtek844d2ww", event_token: "5fcb6t" },
+                        { name: "Unknown 2", app_token: "mqtek844d2ww", event_token: "2yb2u8" },
+                        { name: "Unknown 3", app_token: "mqtek844d2ww", event_token: "gb7gty" },
+                        { name: "Unknown 4", app_token: "mqtek844d2ww", event_token: "l1mclc" }
+                    ]
+                };
+
+                const baseLink = "https://s2s.adjust.com/event?s2s=1";
+
+                if (s2sParams[game]) {
+                    s2sParams[game].forEach(function(param, index) {
+                        const validUntil = calculateFutureTime(index);
+                        let link = `${baseLink}&app_token=${param.app_token}&event_token=${param.event_token}&gps_adid=${adid}`;
+                        let linkElement = `<div class="link-item"><div class="link-title"><strong>${param.name} (Postback: ${validUntil})</strong>:</div> <div class"link-url">${link}</div></div>`;
+                        output.append(linkElement);
+                    });
+                } else {
+                    output.append('<div>No links available for this game.</div>');
+                }
+            }
+
+
+        function clearFields(inputId, outputId) {
+            $('#' + inputId).val('');
+            $('#' + outputId).empty();
+        }
+
+        function copyToClipboard(outputId) {
+            const outputElement = document.getElementById(outputId);
+            const dateTime = new Date().toLocaleString(); // Current date and time for the copy action timestamp
+            let linksText = `Links copied on: ${dateTime}\n\n`; // Start with the timestamp of copying
+
+            const links = Array.from(outputElement.getElementsByClassName('link-item')).map(item => {
+                const title = item.getElementsByClassName('link-title')[0].innerText;
+                const url = item.getElementsByClassName('link-url')[0].innerText;
+                return `**${title}**\n${url}`; // Maintain the format as displayed in the output
+            });
+
+            linksText += links.join('\n\n'); // Add two new lines between each link for better separation
+
+            navigator.clipboard.writeText(linksText).then(function() {
+                alert('Links copied to clipboard!');
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+
+
+
+    </script>
+</body>
+</html>
